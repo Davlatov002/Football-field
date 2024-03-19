@@ -62,15 +62,20 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     )
+    
 
 }
 
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
-        "Auth Token eg [Bearer (JWT)]": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+        'basic': {
+            'type':'basic'
+        },
+        'Bearer': {
+            'type':'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'desription':'Description'
         }
    },
    'DEFAULT_FIELD_INSPECTORS': [
@@ -85,8 +90,8 @@ SWAGGER_SETTINGS = {
     ]
 }
 SIMPLE_JWT = {
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1000000),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10000),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 MIDDLEWARE = [

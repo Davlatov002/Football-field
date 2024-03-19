@@ -67,6 +67,7 @@ def get_user(request):
     serializer = CostomuserSerializer(user, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_all_user(request):
