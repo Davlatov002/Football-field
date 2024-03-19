@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from datetime import datetime
 
+
 @swagger_auto_schema(methods='GET')
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -142,6 +143,7 @@ def create_bron(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @swagger_auto_schema(method='PUT', request_body=UpdateBronSerializer)
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -178,9 +180,13 @@ def bron_delete(request, pk):
     else:
         return Response({'message': "Xatoolik yuzaga keldi"},status=status.HTTP_400_BAD_REQUEST)
     
+
 @swagger_auto_schema(method='POST', request_body=FillterSerializer)
 @api_view(['POST'])
 def filter_stadium(request):
+
+    if request.user.roles == 'OWNER FIELD':
+        raise PermissionDenied("Sizning ro'lingiz uchun ruxsat etilmagan")
 
     start_time = request.data.get('start_time')
     end_time = request.data.get('end_time')
@@ -196,7 +202,7 @@ def filter_stadium(request):
     available_fields = set(map(lambda x: x.foodballfield_id.id, Bron.objects.exclude(Q(start_time__lt=start_time, end_time__gt=end_time))))
     addresses = [i for i in Foodballfield.objects.all() if i.id in available_fields or i.id not in map(lambda x : x.foodballfield_id.id,Bron.objects.all())]
 
-    sorted_addresses = sorted(addresses, key=lambda a: math.sqrt((x - int(a.address.split(",")[0]))**2 + (y - int(a.address.split(",")[1]))**2))
+    sorted_addresses = sorted(addresses, key=lambda a: math.sqrt((x - float(a.address.split(",")[0]))**2 + (y - float(a.address.split(",")[1]))**2))
 
     serialized_fields = FoodballfieldSerialazer(sorted_addresses, many=True)
     return JsonResponse(serialized_fields.data, safe=False, status=status.HTTP_200_OK)
