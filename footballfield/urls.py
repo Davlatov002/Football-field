@@ -14,6 +14,8 @@ urlpatterns = [
     path('filter-stadium/', views.filter_stadium, name='filter-stadium'),
 
     path('get-all-bron/', views.get_all_brons, name='get-all-bron'),
+    path('get-all-bron-user/', views.get_all_bron_user, name='get-all-bron-user'),
+    path('get-all-bron-owner/<str:pk>/', views.get_all_bron_owner, name='get-all-bron-owner'),
     path('get-bron-id/<str:pk>/', views.get_footballfild_id, name='get-bron-id'),
     path('create-bron/', views.create_bron, name='create-bron'),
     path('update-bron-id/<str:pk>/', views.update_bron, name='update-bron-id'),

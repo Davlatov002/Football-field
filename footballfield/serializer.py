@@ -45,7 +45,7 @@ class UpdateBronSerializer(serializers.ModelSerializer):
         return instance
 
 class FillterSerializer(serializers.Serializer):
-    start_time = serializers.DateTimeField(format='%Y-%m-%dT%H:%M')
-    end_time=serializers.DateTimeField(format='%Y-%m-%dT%H:%M')
+    start_time = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%SZ')
+    end_time=serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%SZ')
     x=serializers.FloatField()
     y=serializers.FloatField()

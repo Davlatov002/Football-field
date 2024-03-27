@@ -123,7 +123,7 @@ def get_bron_id(request, pk):
 @api_view(['GET'])
 def get_all_brons(request):
     if request.method == 'GET':
-        if request.user.roles == 'OWNER FIELD':
+        if request.user.roles == 'USER' or request.user.roles == 'OWNER FIELD':
             raise PermissionDenied("Sizning ro'lingiz uchun ruxsat etilmagan")
         brons = Bron.objects.all()
         serializer = BronSerialazer(brons, many=True)
@@ -131,6 +131,33 @@ def get_all_brons(request):
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_all_bron_user(request):
+    
+    user = request.user.id
+    try:
+        fod = Bron.objects.filter(user_id=user)
+    except Foodballfield.DoesNotExist:
+        return Response({'message': "Bunday id li foydalanuvchi topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = FoodballfieldSerialazer(fod, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_all_bron_owner(request, pk):
+
+    if request.user.roles == 'USER':
+            raise PermissionDenied("Sizning ro'lingiz uchun ruxsat etilmagan")
+
+    try:
+        fod = Bron.objects.filter(foodballfield_id=pk)
+    except Foodballfield.DoesNotExist:
+        return Response({'message': "Bunday id li bron topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = FoodballfieldSerialazer(fod, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @swagger_auto_schema(method='POST', request_body=BronCreateSerializer)
 @api_view(['POST'])
@@ -194,12 +221,12 @@ def filter_stadium(request):
     y =request.data.get('y')
 
     try:
-        start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
-        end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+        start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%SZ')
+        end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%SZ')
     except ValueError:
         return JsonResponse({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
-    available_fields = set(map(lambda x: x.foodballfield_id.id, Bron.objects.exclude(Q(start_time__lt=start_time, end_time__gt=end_time))))
+    available_fields = set(map(lambda x: x.foodballfield_id.id, Bron.objects.exclude(Q(start_time__lte=start_time, end_time__gte=end_time))))
     addresses = [i for i in Foodballfield.objects.all() if i.id in available_fields or i.id not in map(lambda x : x.foodballfield_id.id,Bron.objects.all())]
 
     sorted_addresses = sorted(addresses, key=lambda a: math.sqrt((x - float(a.address.split(",")[0]))**2 + (y - float(a.address.split(",")[1]))**2))
