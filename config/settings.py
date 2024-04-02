@@ -130,16 +130,16 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # PostgreSQL ma'lumotlar bazasini sozlash
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stadiondb',        # Ma'lumotlar bazasining nomi
-        'USER': 'postgres',            # Foydalanuvchi nomi
-        'PASSWORD': 'root1234',    # Foydalanuvchi paroli
-        'HOST': 'db',                # Ma'lumotlar bazasi serverining nomi (docker-compose faylida nomlangan)
-        'PORT': '5432',              # Ma'lumotlar bazasi porti
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'stadiondb',        # Ma'lumotlar bazasining nomi
+#         'USER': 'postgres',            # Foydalanuvchi nomi
+#         'PASSWORD': 'root1234',    # Foydalanuvchi paroli
+#         'HOST': 'db',                # Ma'lumotlar bazasi serverining nomi (docker-compose faylida nomlangan)
+#         'PORT': '5432',              # Ma'lumotlar bazasi porti
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -149,16 +149,16 @@ DATABASES = {
 # }
 
 #  Postgreql data baza uchun
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'foodball_stadions',
-#         'USER': 'postgres',
-#         'PASSWORD': 'root123',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'foodball_stadions',
+        'USER': 'postgres',
+        'PASSWORD': 'root123',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
